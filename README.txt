@@ -1,4 +1,4 @@
-ArbitragemNano
+<h1> ArbitragemNano<h1>
 Este é um projeto com o intuito de realizar arbitragem da criptomoeda NANO entre duas corretoras diferentes para no fim obter lucro.
 Por ser um mercado descentralizado, cada corretora de criptomoedas possui um preço devido a oferta e demanda serem divergentes em cada sítio, isto é diferentemente da bolsa de valores de São Paulo( a B3) todos ativos negociados no mercado secundário precisam passar pela B3. 
 Assim, independendente da corretora que está operando para comprar ações seja XP ou Banco Inter ,por exemplo isto não afetará o preço do ativo, pelo fato de que todos ativos são negociados na bolsa de valores, assim não importando qual corretora é cliente ao adquirir ações, o preço vai ser o mesmo na corretora X ou Y no mesmo horário,data e quantidade ofertada. Porém, isto não é verdade em ativos descentralizados, isto é as criptomoedas. 
