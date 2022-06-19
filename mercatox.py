@@ -1,18 +1,13 @@
-import requests
-import json
-from bs4 import BeautifulSoup
+import math
+A = 2600
+B = 1950
+C = 3900
+s = math.gcd(A,B,C)
+##Como a editora deseja remeter os três pedidos com a mesma quantidade de livros
+# e com o maior número de livros possível por pacote, quantos pacotes serão remetidos ao todo?
 
-response = requests.get("https://mercatox.com/api/public/v1/asset")
-#‘endpoint’ - Endpoint of API you are accessing,
-#‘params’ - incoming request parameters (if required)
-url = 'https://mercatox.com/api/public/v1/asset'
-#print(assets.json())
-data = response.json()
-
-for item in data["XRB"]:
-    print("item is:" + str(item))
-
-print(data["XRB"]["taker_fee"])
-
-#Fee of Nano / XRB
-fee_mercatox = data["XRB"]["taker_fee"]
+print(s)
+print(A/s)
+print(B/s)
+print(C/s)
+print("Soma é{0}".format(A/s+B/s+C/s))
