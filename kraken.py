@@ -11,11 +11,13 @@ kraken_api_url = "https://api.kraken.com"
 
 # Here it is info that can be changed easily
 
-Kminimum_nano = 0.1 #minimum that can be withdraw from Kraken
-Kwithdraw_fee_nano = 0.05 #Withdraw fees
-volume = 100  #Volume of USDT used in this operation in any exchange
-Ktrade_fee = volume * (0.016 / 100) #Fee #it can be automate, see the final part
-Bwithdrawfee = 0.02 #https://www.binance.com/en/fee/cryptoFee
+Kminimum_nano = 0.1  # minimum that can be withdraw from Kraken
+Kwithdraw_fee_nano = 0.05  # Withdraw fees at https://support.kraken.com/hc/pt/articles/360000767986-Taxas-e-valores-m%C3%ADnimos-para-retirada-de-criptomoedas
+volume = 100  # Volume of USDT used in this operation in any exchange
+Ktrade_fee = volume * (0.016 / 100)  # Fee #it can be automate, see the final part
+pair = "NANOUSDT"
+ticker_kraken = "NANO"
+
 # Here it ends the  info that can be changed easily
 
 def get_kraken_signature(urlpath, data, secret):
@@ -29,7 +31,7 @@ def get_kraken_signature(urlpath, data, secret):
 
 
 # Attaches auth headers and returns results of a POST request
-def kraken_request(uri_path, data, kraken_api_key, kraken_api_sec):
+def kraken_request(uri_path: object, data: object, kraken_api_key: object, kraken_api_sec: object) -> object:
     headers = {}
     headers['API-Key'] = kraken_api_key
     # get_kraken_signature() as defined in the 'Authentication' section
@@ -45,35 +47,39 @@ jsonresponse = resp.json()
 NANO_ask = jsonresponse["result"]["NANOUSD"]["a"]
 NANO_ask_price = float(NANO_ask[0])
 
-
 NANO_bid = jsonresponse["result"]["NANOUSD"]["a"]
 NANO_bid_price = float(NANO_bid[0])
 
+
 # Nano Ask is Sell, and Nano Bid is buy
 
-# If we want to see the balance in Nano at Kraken
-resp = kraken_request('/0/private/Balance', {
-    "nonce": str(int(1000 * time.time())),
-}, kraken_api_key, kraken_api_sec)
-jsonresponse = resp.json()
-NANO_Balance = jsonresponse["result"]["NANO"]
+# If we want to see the balance in Nano or other coin at Kraken
+def balancekraken(coin):
+    kraken_request('/0/private/Balance', {
+        "nonce": str(int(1000 * time.time())),
+    }, kraken_api_key, kraken_api_sec)
+    jsonresponse = resp.json()
+    Balance = jsonresponse["result"][coin]
+    return Balance
+
+
 # print(jsonresponse["result"]["NANO"]) -- if we withdraw the comment on this we can print the balance
 
-#Here it is calculation the Price of Nano with all the costs including withdraw from Kraken
+# Here it is calculation the Price of Nano with all the costs including withdraw from Kraken
 NANO_Buy_PriceK = NANO_bid_price + Ktrade_fee + Kwithdraw_fee_nano
-NANO_Buy_PriceKZ = NANO_bid_price  + Kwithdraw_fee_nano
-#If we sell on Kraken
+
+# If we sell on Kraken
 # here it will be used the ask price
-KrakenSell= NANO_ask_price * volume - Ktrade_fee
-NANO_QuantityK = volume/NANO_bid_price
+KrakenSell = NANO_ask_price * volume - Ktrade_fee
+NANO_QuantityK = volume / NANO_bid_price
 NANO_ExitfromKraken = NANO_QuantityK - Kwithdraw_fee_nano
 
-#To see what is the tax on Kraken
-resp= kraken_request('/0/private/TradeVolume', {
-    "nonce": str(int(1000*time.time())),
+# To see what is the tax on Kraken
+resp = kraken_request('/0/private/TradeVolume', {
+    "nonce": str(int(1000 * time.time())),
     "fee-info": True,
     "pair": "NANOUSD"
 }, kraken_api_key, kraken_api_sec)
 jsonresponse = resp.json()
-#for key, value in jsonresponse["result"].items():
+# for key, value in jsonresponse["result"].items():
 #    print(key, "", value)
