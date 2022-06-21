@@ -3,6 +3,7 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/Marcosgcr/ArbitragemNano?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/Marcosgcr/ArbitragemNano?style=social)
 
+The project is well comented in the code in plain English. I am open to contribuiters for the code. Thank you. T
 ArbitragemNano
 
 Este é um projeto com o intuito de realizar arbitragem da criptomoeda NANO entre duas corretoras diferentes para no fim obter lucro.
