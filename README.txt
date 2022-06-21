@@ -22,5 +22,4 @@ Usando a documentação API de cliente da Binance: https://binance-docs.github.i
 Pelo coinmarketcap, verifiquei as corretoras com maior negociação da criptomoeda escolhida e que tenham uma API de preferencia com Python para eu interagir.
 Escolhi a Binance e a Kraken
 
-No entando, após realizar todo o código incluindo variáveis, loop, API etc. O projeto é financeiramente inviável devido aos altos custos de saques, que são taxas cobradas pelas corretoras e pelas taxas de negociação.
-Portanto, este projeto até houver menores taxas e ou mais corretoras com API, como a Mercadox ficará sem atualizações-
+
