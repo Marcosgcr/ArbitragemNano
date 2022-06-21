@@ -1,4 +1,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/Marcosgcr/ArbitragemNano)
+![GitHub followers](https://img.shields.io/github/followers/Marcosgcr?style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/Marcosgcr/ArbitragemNano?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Marcosgcr/ArbitragemNano?style=social)
 
 ArbitragemNano
 
