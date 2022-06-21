@@ -1,4 +1,4 @@
-https://img.shields.io/github/last-commit/Marcosgcr/ArbitragemNano
+<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Marcosgcr/ArbitragemNano">
 ArbitragemNano
 
 Este é um projeto com o intuito de realizar arbitragem da criptomoeda NANO entre duas corretoras diferentes para no fim obter lucro.
