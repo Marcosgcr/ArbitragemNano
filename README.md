@@ -18,7 +18,7 @@ Using this idea, that it´s used for many years in the crypto industry so called
 ## Why Nano(XNO)?
 
 This project today uses only Nano(XNO) to arbitrage. This can be used with many other crypto but i choose only Nano to simplify this process.
-Also, this project have mainly financial porposes, that said it needs a crypto that has less or zero fees to move in the net and the most fast between exchanges.
+Also, this project have mainly financial porposes, that said it needs a crypto that has less or zero fees to move in the net and the fastest between exchanges.
 This is a perfect job for Nano, cause it´s feelees (*yes, most crypto has fees to move around*) and it is fast.
 
 More details about NANO: https://nano.org/
