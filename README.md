@@ -13,7 +13,7 @@ This is a project to use the differences in price between exchanges to buy and s
 In stocks and other 'regular' assets, they are all negociated in one place. For example, if you want to buy Microsoft stock, it dosn´t matter which broker do you use, because all the demand and supply of the asset are in one place.
 In crypto, its different. 
 Since you can withdraw and move the assets freely (as default) all crypto exchanges have supply and demand different from each other. Sometimes you can buy Bitcoin cheaper in Binance than in Kraken for example.
-Using this idea, that it´s used for many years in the crypto industry so called *arbitrage. 
+Using this idea, that it´s used for many years in the crypto industry so called *arbitrage*. 
 
 ## Why Nano(XNO)?
 
