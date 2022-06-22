@@ -23,30 +23,22 @@ This is a perfect job for Nano, cause it´s feelees (*yes, most crypto has fees 
 
 More details about NANO: https://nano.org/
 
+## Can I use?
+
+Yes, you can use, do a fork and modify the project, but read the license of the project here [LICENSE](LICENSE) before doing anything.
+
+Beware of the code, since the code does mess with your KRAKEN and BINANCE balances, such as  put orders to buy,sell and withdraw, you need to review the code.
+*I am not in any way responsible for any loss that you have using this code or either a modified version of this project*
+
+## What i need to know to use?/ What is been used in this program?
+
+For use or modify this code you *must* have understanding of Python , the library [binance-local](https://python-binance.readthedocs.io/en/latest/) and [Kraken API](https://docs.kraken.com/rest/).
 
 
-ArbitragemNano
+## How can I help?
 
-Este é um projeto com o intuito de realizar arbitragem da criptomoeda NANO entre duas corretoras diferentes para no fim obter lucro.
+You can help contacting me and giving me tips about the code or more ideas for the project.
+Also, you can contribute in Python for the code, open discussion and opening issues.
+Also, if this code helped you in any way and you want to contribute financially, contact me.
 
-Por ser um mercado descentralizado, cada corretora de criptomoedas possui um preço devido a oferta e demanda serem divergentes em cada sítio, isto é diferentemente da bolsa de valores de São Paulo( a B3), ou qualquer "padrão", como Nasdaq entre outras.T
-odos ativos negociados no mercado secundário precisam passar pela B3. 
-
-Assim, independendente da corretora que está operando para comprar ações seja XP ou Banco Inter ,por exemplo isto não afetará o preço do ativo, pelo fato de que todos ativos são negociados na bolsa de valores, assim não importando qual corretora usar para  adquirir ações, o preço vai ser o mesmo na corretora X ou Y no mesmo horário,data e quantidade ofertada. 
-Porém, isto não é verdade em ativos descentralizados, isto é as criptomoedas. 
-Assim, vem a ideia de arbitrar entre corretoras, comprar onde está barato e vender onde está mais caro.
-
-A ideia é simples, mas é composta por muitas variáveis tais como integração API com as corretoras, taxas, volatilidade de mercado e escolha do ativo a ser arbitrato.
-
-O ativo escolhido foi a https://nano.org/ ,NANO(XNO), ativo com transações quase que instantaneas e rede capaz de ter uma taxa nula de transferencia.
-Por estar realizando um projeto com fim financeiro, é imprescendivel a velocidade e baixo custo que o ativo deve proporcionar e este é o caso com a NANO. 
-Infelizmente não consigo fugir das taxas de saque,deposito e negociação das corretoras então este estão como variáveis dentro do codigo.
-
-Usando a documentação API da Kraken: https://docs.kraken.com/rest/
-Usando a documentação API de cliente da Binance: https://binance-docs.github.io/apidocs/spot/en/#change-log
-
-
-Pelo coinmarketcap, verifiquei as corretoras com maior negociação da criptomoeda escolhida e que tenham uma API de preferencia com Python para eu interagir.
-Escolhi a Binance e a Kraken
-
-
+---Here it´s the end of the readme----
