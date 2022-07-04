@@ -9,10 +9,13 @@ from auth import *
 # the automated process won't do it.
 profit = 1.10  # here it's almost the % of the profit
 realprofit = xno_price * NANO_ExitfromKraken - trade_fee_XNOUSDT - NANO_Buy_PriceK * volume * profit  # Here it is the /
+
+
 # value of the profit
 # Here is a function that sees where is the most bargain place to buy
 def getmenorprecocorretora():
     Quantity = 0
+    corretora = "none"
 
     # If the overral price in Kraken is less pricey than Binance
     if float(NANO_Buy_PriceK) < float(NANO_Buy_PriceB):
@@ -29,7 +32,7 @@ def getmenorprecocorretora():
 
 # Here is a function that sees where is the most pricey place to sell
 def gethighsell():
-    corretoraSell = 1
+    corretoraSell = "none"
     if KrakenSell > BinanceSell and getmenorprecocorretora() != "KRAKEN":
         # If the most expensive place to sell is KRAKEN
         corretoraSell = "KRAKEN"
@@ -40,7 +43,83 @@ def gethighsell():
 
 
 # Here is the function that calculates if it has any profit the arbitrage and do the action
-def IfProfit():
+def ifprofit():
+    if getmenorprecocorretora() == "KRAKEN" and gethighsell() == "BINANCE":
+        if xno_price * NANO_ExitfromKraken - trade_fee_XNOUSDT > NANO_Buy_PriceK * volume * profit:
+            print(f"It will buy from Kraken, send to and sell at Binance")
+            buykrakensellbinance()
+    if getmenorprecocorretora() == "BINANCE" and gethighsell() == "KRAKEN":
+        if NANO_bid_price * NANO_ExitfromBinance - Ktrade_fee > xno_price * volume * profit:
+            print(f"It will buy from Binance, send to and sell at Kraken")
+            buybinancesellkraken()
+    # Put here other exchanges
+
+
+def fromkrakentobinance(volumeN, trade_fee_XNOUSDT, ticker_kraken):
+    kraken_request('/0/private/Withdraw', {
+        "nonce": str(int(1000 * time.time())),
+        "asset": ticker_kraken,
+        "key": "Nano_Binance",
+        "amount": volumeN - trade_fee_XNOUSDT
+    }, kraken_api_key, kraken_api_sec)
+
+
+def sellatbinance():
+    if Bbefore < binancebalancecoin("NANO"):
+        client.order_limit_sell(
+            symbol="NANOUSDT",
+            quantity=NANO_ExitfromKraken,
+            price=xno_price)
+        if Bbefore > binancebalancecoin("NANO"):
+            # Yes, it sold
+            print("Operation successful")
+            # Calculate the profit
+            print(f"The profit was {realprofit} usdt")
+        else:
+            while Bbefore <= binancebalancecoin("NANO"):
+                time.sleep(10)
+            if Bbefore > binancebalancecoin("NANO"):
+                # Yes, it sold
+                print("Operation was successful")
+                # Calculate the profit
+                print(f"The profit was {realprofit} usdt")
+
+
+def buykrakensellbinance():
+    # Here is the function that buy at Kraken and sell at Binance
+    print("Lucro nesta operação! Iniciando compra na KRAKEN e venda na BINANCE")
+    # Before doing anything else, let´s see how much balance we have of NANO
+    Kbefore = balancekraken("NANO")
+    # Also do the same for BINANCE. we will need it later
+    Bbefore = binancebalancecoin("XNO")
+    # Before putting the order, there is the need to know what the volume of NANO will be
+    volumeN = volume / NANO_ask_price
+    # Here we call the function that does the buy order in Kraken
+    kbuyorder(Kbefore, volumeN, NANO_ask_price)
+    # Let´s send the coin for Binance
+    fromkrakentobinance(volumeN, trade_fee_XNOUSDT, ticker_kraken)
+    # Let´s wait a bit
+    time.sleep(4)
+    # Let´s see if the coin arrived at BINANCE
+    # We will use the balance of BINANCE earlier
+    binancebalancechange(Bbefore)
+
+
+def buybinancesellkraken():
+    print(f"Pass")
+    pass
+
+
+# Put here the code fot buying at Binance, send to Kraken and sell it in Kraken
+
+###Above all the functions needed for the code ###
+
+## Start of the Code #
+
+
+## End of the code
+# Here is the function that calls everything for now
+def All():
     ativacao = 0
     if getmenorprecocorretora() == "KRAKEN" and gethighsell() == "BINANCE":
         # If the least price to buy is on KRAKEN and the most expensive place to sell is BINANCE then

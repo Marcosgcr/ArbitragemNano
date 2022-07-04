@@ -18,7 +18,22 @@ Ktrade_fee = volume * (0.016 / 100)  # Fee #it can be automate, see the final pa
 pair = "NANOUSDT"
 ticker_kraken = "NANO"
 
+
 # Here it ends the  info that can be changed easily
+
+def kbuyorder(pair_token,volumeof,price_order):
+    kraken_request('/0/private/AddOrder', {
+        "nonce": str(int(1000 * time.time())),
+        "ordertype": "limit",
+        "type": "buy",
+        "volume": volumeof,
+        "pair": pair_token,
+        "price": price_order,
+    }, kraken_api_key, kraken_api_sec)
+    if kraken_request.json == 200:
+        compraok = 1
+
+
 
 def get_kraken_signature(urlpath, data, secret):
     postdata = urllib.parse.urlencode(data)
