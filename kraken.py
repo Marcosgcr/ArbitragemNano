@@ -12,7 +12,8 @@ kraken_api_url = "https://api.kraken.com"
 # Here it is info that can be changed easily
 
 Kminimum_nano = 0.1  # minimum that can be withdraw from Kraken
-Kwithdraw_fee_nano = 0.05  # Withdraw fees at https://support.kraken.com/hc/pt/articles/360000767986-Taxas-e-valores-m%C3%ADnimos-para-retirada-de-criptomoedas
+Kwithdraw_fee_nano = 0.05  # Withdraw fees at https://support.kraken.com/hc/pt/articles/360000767986-Taxas-e-valores
+# -m%C3%ADnimos-para-retirada-de-criptomoedas
 volume = 100  # Volume of USDT used in this operation in any exchange
 Ktrade_fee = volume * (0.016 / 100)  # Fee #it can be automate, see the final part
 pair = "NANOUSDT"
@@ -21,18 +22,23 @@ ticker_kraken = "NANO"
 
 # Here it ends the  info that can be changed easily
 
-def kbuyorder(pair_token,volumeof,price_order):
-    kraken_request('/0/private/AddOrder', {
+def kbuyorder(pair_token, volumeof, price_order):
+    if print(kraken_request('/0/private/AddOrder', {
         "nonce": str(int(1000 * time.time())),
         "ordertype": "limit",
         "type": "buy",
         "volume": volumeof,
         "pair": pair_token,
         "price": price_order,
-    }, kraken_api_key, kraken_api_sec)
-    if kraken_request.json == 200:
-        compraok = 1
-
+    }, kraken_api_key, kraken_api_sec)) == 200:
+        kraken_request('/0/private/AddOrder', {
+            "nonce": str(int(1000 * time.time())),
+            "ordertype": "limit",
+            "type": "buy",
+            "volume": volumeof,
+            "pair": pair_token,
+            "price": price_order,
+        }, kraken_api_key, kraken_api_sec)
 
 
 def get_kraken_signature(urlpath, data, secret):
@@ -46,11 +52,13 @@ def get_kraken_signature(urlpath, data, secret):
 
 
 # Attaches auth headers and returns results of a POST request
+# noinspection PyTypeChecker
 def kraken_request(uri_path: object, data: object, kraken_api_key: object, kraken_api_sec: object) -> object:
     headers = {}
     headers['API-Key'] = kraken_api_key
     # get_kraken_signature() as defined in the 'Authentication' section
     headers['API-Sign'] = get_kraken_signature(uri_path, data, kraken_api_sec)
+    # noinspection PyTypeChecker
     req = requests.post((kraken_api_url + uri_path), headers=headers, data=data)
     return req
 
@@ -70,12 +78,12 @@ NANO_bid_price = float(NANO_bid[0])
 
 # If we want to see the balance in Nano or other coin at Kraken
 def balancekraken(coin):
-    kraken_request('/0/private/Balance', {
+    resp = kraken_request('/0/private/Balance', {
         "nonce": str(int(1000 * time.time())),
     }, kraken_api_key, kraken_api_sec)
     jsonresponse = resp.json()
     Balance = jsonresponse["result"][coin]
-    return Balance
+    print(Balance)
 
 
 # print(jsonresponse["result"]["NANO"]) -- if we withdraw the comment on this we can print the balance
@@ -90,11 +98,11 @@ NANO_QuantityK = volume / NANO_bid_price
 NANO_ExitfromKraken = NANO_QuantityK - Kwithdraw_fee_nano
 
 # To see what is the tax on Kraken
-resp = kraken_request('/0/private/TradeVolume', {
-    "nonce": str(int(1000 * time.time())),
-    "fee-info": True,
-    "pair": "NANOUSD"
-}, kraken_api_key, kraken_api_sec)
-jsonresponse = resp.json()
+# resp = kraken_request('/0/private/TradeVolume', {
+#    "nonce": str(int(1000 * time.time())),
+#    "fee-info": True,
+#    "pair": "NANOUSD"
+# }, kraken_api_key, kraken_api_sec)
+# jsonresponse = resp.json()
 # for key, value in jsonresponse["result"].items():
 #    print(key, "", value)
