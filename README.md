@@ -43,6 +43,8 @@ No, to this day i didn´t have tested the program.
 
 ## How can I help?
 
+I have been contributing a lot of work and time for this project and i´ts open souce.
+If this code helped you in any way, feel free to help.
 There is many ways that you can help me.
 Helping the advancing of the code on this project or helping me financially.
 
