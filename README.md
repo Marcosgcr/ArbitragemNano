@@ -29,6 +29,9 @@ Yes, you can use, do a fork and modify the project, but read the license of the 
 
 Beware of the code, since the code does mess with your KRAKEN and BINANCE balances, such as  put orders to buy,sell and withdraw, you need to review the code, since using it may have chances to go on loss and profit(that is the goal here).
 
+Also, you do have to add API´s keys and secrets, and also edit current deposit/withdraw addresses
+## Liability
+
 *I am not in any way responsible for any loss that you may have using this code or either a modified version of this project*
 
 ## What i need to know to use?/ What is been used in this program?
