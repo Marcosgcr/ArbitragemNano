@@ -36,16 +36,13 @@ Beware of the code, since the code does mess with your KRAKEN and BINANCE balanc
 For use or modify this code you *must* have understanding of Python , the library [binance-local](https://python-binance.readthedocs.io/en/latest/) and [Kraken API](https://docs.kraken.com/rest/), and basic undestanfing of how Kraken and Binance exchanges works.
 
 
-## This is finished?
+## Have I tested ?
 
-No, still has more things to go.
-Wait for updates or contribute
+No, to this day i didn´t have tested the program. 
 
 
 ## How can I help?
 
-I have been contributing a lot of work and time for this project and i´ts open souce.
-If this code helped you in any way, feel free to help.
 There is many ways that you can help me.
 Helping the advancing of the code on this project or helping me financially.
 

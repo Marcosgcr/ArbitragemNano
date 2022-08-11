@@ -7,15 +7,17 @@ import base64
 import time
 from auth import kraken_api_key, kraken_api_sec
 
+# Put here the deposit address for NANO at kraken
+Kraken_deposit = "nano_1kcnp5qcix7jtjx3birw86tpzhajqif9j4uk55inhpu6qbfdxwxciqnbhoes"
 kraken_api_url = "https://api.kraken.com"
 
 # Here it is info that can be changed easily
 
 Kminimum_nano = 0.1  # minimum that can be withdraw from Kraken
-Kwithdraw_fee_nano = 0.05  # Withdraw fees at https://support.kraken.com/hc/pt/articles/360000767986-Taxas-e-valores
+Kwithdraw_fee_nano = 0.0550648  # Withdraw fees at https://support.kraken.com/hc/pt/articles/360000767986-Taxas-e-valores
 # -m%C3%ADnimos-para-retirada-de-criptomoedas
 volume = 100  # Volume of USDT used in this operation in any exchange
-Ktrade_fee = volume * (0.016 / 100)  # Fee #it can be automate, see the final part
+Ktrade_fee = volume * (0.26 / 100)  # Fee #it can be automate, see the final part
 pair = "NANOUSDT"
 ticker_kraken = "NANO"
 
@@ -84,6 +86,7 @@ def balancekraken(coin):
     jsonresponse = resp.json()
     Balance = jsonresponse["result"][coin]
     print(Balance)
+    return Balance
 
 
 # print(jsonresponse["result"]["NANO"]) -- if we withdraw the comment on this we can print the balance

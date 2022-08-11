@@ -4,7 +4,7 @@ from binance import Client
 # API secret and API key
 from auth import binance_api_key, binance_api_sec
 
-Bwithdrawfee = 0.02  # https://www.binance.com/en/fee/cryptoFee
+Bwithdrawfee = 0.023  # https://www.binance.com/en/fee/cryptoFee
 
 # Firstly we have the API
 client = Client(binance_api_sec, binance_api_key)
@@ -13,7 +13,7 @@ api_url = "https://api.binance.com"
 # Here it's the variables like taxes and so on, that is constantly changed by the exchanges:
 
 Bminimum_xno = 0.058  # Minimum value for trade at https://www.binance.com/en/fee/cryptoFee
-Bwithdrawfee = 0.029  # Withdraw fee at https://www.binance.com/en/fee/cryptoFee
+Bwithdrawfee = 0.023  # Withdraw fee at https://www.binance.com/en/fee/cryptoFee
 
 # Fee
 trade_fee_XNOUSDT = float(client.get_trade_fee(symbol='XNOUSDT')[0]["takerCommission"]) * volume
@@ -65,6 +65,6 @@ NANO_Buy_PriceB = xno_price + trade_fee_XNOUSDT + Bwithdrawfee
 NANO_QuantityB = volume / xno_price
 NANO_ExitfromBinance = NANO_QuantityB - Bwithdrawfee
 
-BinanceSell = xno_price * volume - (trade_fee_XNOUSDT * volume)
+BinanceSell = xno_price * volume - (trade_fee_XNOUSDT/100 * volume)
 # Here we know that we will sell less than the volume bought(because of withdraw fees and taxes where we bought NANO),
 # still we are using it To be more easy to do it, and so we have a calculation of fee in other function
