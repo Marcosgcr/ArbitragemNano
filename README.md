@@ -38,15 +38,21 @@ Also, you do have to add API´s keys and secrets, and also edit current deposit/
 
 For use or modify this code you *must* have understanding of Python , the library [binance-local](https://python-binance.readthedocs.io/en/latest/) and [Kraken API](https://docs.kraken.com/rest/), and basic undestanfing of how Kraken and Binance exchanges works.
 
+You can see the dependencies of the project [here](https://github.com/Marcosgcr/ArbitragemNano/blob/main/requirements.txt)
+Before of downloading the requirement library I suggest you read the docs about it or the [github repository](https://github.com/sammchardy/python-binance).
 
-## Have I tested ?
 
-No, to this day i didn´t have tested the program. 
+## The program is finished/ is tested?
+
+Always the program could have more features, like for example more coins to arbitrage and adding more exchanges to do the arbitrage.
+To this day I have tested but I did not had an sucessfull arbitrage yet.Because the program didn´t found an profit opportunity between Kraken and Binance. This  will only be a matter of time, cause the price discrepency between those happen from time to time.
+
+*The number of days that the program is running is 2 days. From 10 aug to 12Aug*
 
 
 ## How can I help?
 
 There is many ways that you can help me.
-Helping the advancing of the code on this project or helping me financially.
+Helping the advancing of the code on this project or helping me financially or even using and reporting suggestion or apearings flaws.
 
 
