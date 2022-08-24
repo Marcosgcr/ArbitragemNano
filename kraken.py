@@ -17,7 +17,7 @@ Kminimum_nano = 0.1  # minimum that can be withdraw from Kraken
 Kwithdraw_fee_nano = 0.0550648  # Withdraw fees at https://support.kraken.com/hc/pt/articles/360000767986-Taxas-e-valores
 # -m%C3%ADnimos-para-retirada-de-criptomoedas
 volume = 100  # Volume of USDT used in this operation in any exchange
-Ktrade_fee = volume * (0.26 / 100)  # Fee #it can be automate, see the final part
+Ktrade_fee = volume * (0.26 / 100)  # Fee #it can be automated, see the final part
 pair = "NANOUSDT"
 ticker_kraken = "NANO"
 
@@ -85,7 +85,6 @@ def balancekraken(coin):
     }, kraken_api_key, kraken_api_sec)
     jsonresponse = resp.json()
     Balance = jsonresponse["result"][coin]
-    print(Balance)
     return Balance
 
 

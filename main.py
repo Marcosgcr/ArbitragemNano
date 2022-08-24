@@ -1,22 +1,19 @@
 # Here we import the API´s exchanges from the file auth and most of the variables from other files
+import time
+
 from binancelocal import *
 from kraken import *
+# Here we import the library binance.client
 from binance.client import *
+# Here it is imported the API´s from the exchanges used
 from auth import *
 
 # How much profit do you need 1.00 = 0 profit, if it is 1.20 that´s 20% profit. If the arbitrage isn't 20% of profit,
 # the automated process won't do it.
-profit = 1.10  # here it's almost the % of the profit
+profit = 1.01
 realprofit = xno_price * NANO_ExitfromKraken - trade_fee_XNOUSDT - NANO_Buy_PriceK * volume * profit  # Here it is the /
 
 
-# For we don't are banned using Binance API, let´s use the time.sleep
-
-def zzz(seconds):
-    time.sleep(seconds)
-
-
-# value of the profit
 # Here is a function that sees where is the most bargain place to buy
 def getmenorprecocorretora():
     time.sleep(1)
@@ -26,20 +23,23 @@ def getmenorprecocorretora():
     if float(NANO_Buy_PriceK) < float(NANO_Buy_PriceB):
         Price = NANO_Buy_PriceB
         corretora = "KRAKEN"
-        print("The cheapest place to buy is at Kraken")
+        # print("The cheapest place to buy is at Kraken")
     # If the overall price in Binance is less pricey than Kraken
     if float(NANO_Buy_PriceB) < float(NANO_Buy_PriceK):
         Price = NANO_Buy_PriceB
         corretora = "BINANCE"
-        print("The cheapest place to buy is at BINANCE")
+        # print("The cheapest place to buy is at BINANCE")
     return corretora
 
 
 def buybinancesellkraken():
     print(f"Starting the action of buy at binance and sell at Kraken")
     # First let´s see how much XNO we have in the account
-    NanoBalance = client.get_asset_balance(asset='XNO')
+    NanoBalance = client.get_asset_balance(asset='XNO')['free']
     # Putting an order to buy XNO
+    print(f"The quantity of Nano is {NanoBalance}")
+
+    # DEBUGGING -
     order = client.order_limit_buy(
         symbol='XNOUSDT',
         quantity=volume,
@@ -47,24 +47,38 @@ def buybinancesellkraken():
     # wait a bit
     time.sleep(1)
     # See if bought
-    while NanoBalance == client.get_asset_balance(asset='XNO'):
+    print("Mandou a ordem!")
+    while NanoBalance >= client.get_asset_balance(asset='XNO')['free']:
         time.sleep(5)
-    if NanoBalance < client.get_asset_balance(asset='XNO'):
+    if NanoBalance < client.get_asset_balance(asset='XNO')['free']:
         print("Buy at Binance successful")
         # Yes, we have successfully bought
         # Let´s calculate the volume of XNO in Kraken
         krakenbalancebefore = balancekraken("NANO")
+        print("DEBUG-Krakenbalancebefore = balancekraken(NANO)")
         # Now, let´s send XNO to Kraken,
         # Kraken address = address for NANO in Kraken file
-        result = client.withdraw(
-            coin='XNO',
-            address=Kraken_deposit,
-            amount=client.get_asset_balance(asset='XNO'))
+        # client.withdraw(
+        #    coin='XNO',
+        #    address=Kraken_deposit,
+        #    amount=volume)
+        from binance.exceptions import BinanceAPIException
+        try:
+            # name parameter will be set to the asset value by the client if not passed
+            result = client.withdraw(
+                coin='XNO',
+                address='Kraken_deposit',
+                amount=volume)
+        except BinanceAPIException as e:
+            print(e)
+        else:
+            print("Success")
+        print("DEBUG-Enviado ordem de saque para Kraken")
         # Let´s calculate how much XNO will arrive at Kraken
         arriveatkraken = volume - trade_fee_XNOUSDT - Bwithdrawfee
         # Let´s wait for when NANO arrives at Kraken
         while krakenbalancebefore == balancekraken("NANO"):
-            time.sleep(2)
+            time.sleep(5)
             if krakenbalancebefore < balancekraken("NANO"):
                 kraken_request('/0/private/AddOrder', {
                     "nonce": str(int(1000 * time.time())),
@@ -74,11 +88,10 @@ def buybinancesellkraken():
                     "pair": "NANOUSDT",
                 }, kraken_api_key, kraken_api_sec)
             while balancecoin("NANO") >= krakenbalancebefore:
-                time.sleep(2)
-                print("Nano was sent to Kraken, yet didn´t sold")
+                time.sleep(5)
+                print("Nano was sent to Kraken, yet did not  sold")
             if balancecoin("NANO") < krakenbalancebefore:
                 print("Operation successful")
-
 
 
 def sellatkraken():
@@ -89,17 +102,19 @@ def sellatkraken():
 # Here is a function that sees where is the most pricey place to sell
 def gethighsell():
     corretoraSell = "none"
-    time.sleep(1)
+    time.sleep(2)
+    # print(f"Nano price is {NANO_bid_price} at Kraken")
+    # print(f"XNO PRICE IS {xno_price} at binance")
     if KrakenSell < BinanceSell and getmenorprecocorretora() != "KRAKEN":
-        # KrakenSell and BinanceSell if greater is whose place we will get less coin
+        # KrakenSell and BinanceSell greater whose place we will get less coin
         # If the most expensive place to sell is KRAKEN
         corretoraSell = "KRAKEN"
-        print("The expensive place to sell is at Kraken and the cheapest place to buy isn´t at Kraken")
+        # print("The expensive place to sell is at Kraken")
 
     if BinanceSell < KrakenSell and getmenorprecocorretora() != "BINANCE":
         # If the most expensive place to sell is BINANCE
         corretoraSell = "BINANCE"
-        print("The expensive place to sell is at Binance and the cheapest place to buy isn´t at Binance")
+        # print("The expensive place to sell is at Binance")
 
         # We can´t buy and sell at the same place
 
@@ -107,8 +122,6 @@ def gethighsell():
         # https://www.binance.com/en/fee/cryptoFee
         # 0.023(withdraw fee) and 0.10% -> Binance
         # 0.0550648(withdraw fee) and 0.26% -> Kraken
-    if getmenorprecocorretora() == "BINANCE":
-        corretoraSell = "KRAKEN"
     return corretoraSell
 
 
@@ -116,20 +129,31 @@ def gethighsell():
 def ifprofit():
     a = 0
     while a == 0:
-        print("Still didn't was found the best place to buy and to sell.. Searching")
+        time.sleep(10)
+        getmenorprecocorretora()
+        gethighsell()
+        print("Searching for profit...")
         # We don´t need here to wait because the two function under already have time sleep
         if getmenorprecocorretora() == "KRAKEN" and gethighsell() == "BINANCE":
+            print(f"Buy at Kraken")
+            print(f"Sell at Binance")
             print("The best place to buy is Kraken and the best place to sell is Binance, lets see if it has profit")
-            if xno_price * NANO_ExitfromKraken - trade_fee_XNOUSDT > NANO_Buy_PriceK * volume:
+            print(f"Profit is {xno_price * (NANO_ExitfromKraken - trade_fee_XNOUSDT) - (NANO_Buy_PriceK * volume)} ")
+            if xno_price * (NANO_ExitfromKraken - trade_fee_XNOUSDT) > (NANO_Buy_PriceK * volume) * profit:
                 a = 1
                 print(f"It will buy from Kraken, send to Binance and sell it there")
                 buykrakensellbinance()
 
         if getmenorprecocorretora() == "BINANCE" and gethighsell() == "KRAKEN":
-            print("The best place to buy is Binance and the best place to sell is Kraken, let´s see if has profit..")
-            if NANO_bid_price * NANO_ExitfromBinance - Ktrade_fee > xno_price * volume:
+            print("Buy at Binance")
+            print("Sell at Kraken")
+            print(f"Selling price is {NANO_bid_price * (NANO_ExitfromBinance - Ktrade_fee)}")
+            print(f"Buying price is {xno_price * volume + trade_fee_XNOUSDT}")
+            print(f"Profit is {NANO_bid_price * (NANO_ExitfromBinance - Ktrade_fee) - (xno_price * volume + trade_fee_XNOUSDT)}")
+            if NANO_bid_price * (NANO_ExitfromBinance - Ktrade_fee) > (xno_price * volume + trade_fee_XNOUSDT) * profit:
                 a = 1
                 print(f"It will buy from Binance, send to Kraken and sell it there")
+
                 buybinancesellkraken()
 
     # Put here other exchanges
@@ -160,7 +184,7 @@ def buykrakensellbinance():
     # Let´s send the coin for Binance
     fromkrakentobinance(volumeN, trade_fee_XNOUSDT, ticker_kraken)
     # Let´s wait a bit
-    time.sleep(10)
+    time.sleep(1)
     # Let´s see if the coin arrived at BINANCE
     # We will use the balance of BINANCE earlier and after that sell NANO at Binance with the function sellatbinance
     sellatbinance(Bbefore)
@@ -207,7 +231,7 @@ ifprofit()
 def All():
     print("INICIANDO DEF ALL")
     ativacao = 0
-    if getmenorprecocorretora() == "KRAKEN" and gethighsell() == "BINANCE":
+    if getmenorprecocorretora() == "KRAKEN" and gethighsell() == "BINANCE" and ativacao == 1:
         # If the least price to buy is on KRAKEN and the most expensive place to sell is BINANCE then
         # buys at KRAKEN and sells at BINANCE
         if xno_price * NANO_ExitfromKraken - trade_fee_XNOUSDT > NANO_Buy_PriceK * volume * profit:
@@ -308,9 +332,9 @@ def All():
             # Here it will confirm if the bought went in success or not
             time.sleep(4)
 
-    if getmenorprecocorretora() == "BINANCE" and gethighsell() == "KRAKEN":
-        if NANO_ask_price * NANO_ExitfromBinance - Ktrade_fee > NANO_Buy_PriceB * volume:
-            print("Lucro nesta operação!Iniciando compra na BINANCE e venda na KRAKEN")
+            #   if getmenorprecocorretora() == "BINANCE" and gethighsell() == "KRAKEN":
+            #       if NANO_ask_price * NANO_ExitfromBinance - Ktrade_fee > NANO_Buy_PriceB * volume:
+            #           print("Lucro nesta operação!Iniciando compra na BINANCE e venda na KRAKEN")
             # Iniciar compra BINANCE
             # CONFIRMAR QUE COMPROU BINANCE
             # PEDIR ENDEREÇO DEPOSITO KRAKEN
