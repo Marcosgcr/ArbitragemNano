@@ -7,11 +7,10 @@ from kraken import *
 from binance.client import *
 # Here it is imported the API´s from the exchanges used
 from auth import *
-
+volume = 10
 # How much profit do you need 1.00 = 0 profit, if it is 1.20 that´s 20% profit. If the arbitrage isn't 20% of profit,
 # the automated process won't do it.
-profit = 1.005
-realprofit = xno_price * NANO_ExitfromKraken - trade_fee_XNOUSDT - NANO_Buy_PriceK * volume * profit  # Here it is the /
+profit = 1.3
 
 
 # Here is a function that sees where is the most bargain place to buy
@@ -19,6 +18,10 @@ def getmenorprecocorretora():
     time.sleep(1)
     Quantity = 0
     corretora = "none"
+    if xno_priceBUSD < xno_price:
+        NANO_Buy_PriceB = xno_priceBUSD + trade_fee_XNOBUSD + Bwithdrawfee
+    else:
+        NANO_Buy_PriceB = xno_price + trade_fee_XNOUSDT + Bwithdrawfee
     # If the overall price in Kraken is less pricey than Binance
     if float(NANO_Buy_PriceK) < float(NANO_Buy_PriceB):
         Price = NANO_Buy_PriceB
@@ -38,12 +41,18 @@ def buybinancesellkraken():
     NanoBalance = client.get_asset_balance(asset='XNO')['free']
     # Putting an order to buy XNO
     print(f"The quantity of Nano is {NanoBalance}")
-
-    # DEBUGGING -
-    order = client.order_limit_buy(
-        symbol='XNOUSDT',
-        quantity=volume,
-        price=xno_price)
+    if xno_priceBUSD < xno_price and binancebalancecoin('BUSD')['free'] >= volume:
+        x = round(volume/xno_priceBUSD,2)
+        order = client.order_limit_buy(
+            symbol='XNOBUSD',
+            quantity=x,
+            price=xno_priceBUSD)
+    else:
+        x = round(volume/xno_price,2)
+        order = client.order_limit_buy(
+            symbol='XNOUSDT',
+            quantity=x,
+            price=xno_price)
     # wait a bit
     time.sleep(1)
     # See if bought
@@ -78,7 +87,7 @@ def buybinancesellkraken():
         arriveatkraken = volume - trade_fee_XNOUSDT - Bwithdrawfee
         # Let´s wait for when NANO arrives at Kraken
         while krakenbalancebefore == balancekraken("NANO"):
-            time.sleep(5)
+            time.sleep(2)
             if krakenbalancebefore < balancekraken("NANO"):
                 kraken_request('/0/private/AddOrder', {
                     "nonce": str(int(1000 * time.time())),
@@ -150,8 +159,9 @@ def ifprofit():
             print("Sell at Kraken")
             print(f"Selling price is {NANO_bid_price * (NANO_ExitfromBinance - Ktrade_fee)}")
             print(f"Buying price is {xno_price * volume + trade_fee_XNOUSDT}")
-            print(f"Profit is {NANO_bid_price * (NANO_ExitfromBinance - Ktrade_fee) - (xno_price * volume + trade_fee_XNOUSDT)}")
-            if NANO_bid_price * (NANO_ExitfromBinance - Ktrade_fee) > (xno_price * volume + trade_fee_XNOUSDT) * profit:
+            print(
+                f"Profit is {NANO_bid_price * (NANO_ExitfromBinance - Ktrade_fee) - (xno_price * volume + trade_fee_XNOUSDT)}")
+            if NANO_bid_price * (NANO_ExitfromBinance - Ktrade_fee) > (xno_price * volume + trade_fee_XNOUSDT) * profit or NANO_bid_price * (NANO_ExitfromBinance - Ktrade_fee) > (xno_priceBUSD * volume + trade_fee_XNOBUSD) * profit:
                 a = 1
                 print(f"It will buy from Binance, send to Kraken and sell it there")
 
