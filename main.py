@@ -10,7 +10,7 @@ from auth import *
 
 # How much profit do you need 1.00 = 0 profit, if it is 1.20 that´s 20% profit. If the arbitrage isn't 20% of profit,
 # the automated process won't do it.
-profit = 1.01
+profit = 1.005
 realprofit = xno_price * NANO_ExitfromKraken - trade_fee_XNOUSDT - NANO_Buy_PriceK * volume * profit  # Here it is the /
 
 
@@ -54,7 +54,7 @@ def buybinancesellkraken():
         print("Buy at Binance successful")
         # Yes, we have successfully bought
         # Let´s calculate the volume of XNO in Kraken
-        krakenbalancebefore = balancekraken("NANO")
+        krakenbalancebefore = binancebalancecoin("XNO")["free"]
         print("DEBUG-Krakenbalancebefore = balancekraken(NANO)")
         # Now, let´s send XNO to Kraken,
         # Kraken address = address for NANO in Kraken file
@@ -67,7 +67,7 @@ def buybinancesellkraken():
             # name parameter will be set to the asset value by the client if not passed
             result = client.withdraw(
                 coin='XNO',
-                address='Kraken_deposit',
+                address=Kraken_deposit,
                 amount=volume)
         except BinanceAPIException as e:
             print(e)
@@ -87,10 +87,10 @@ def buybinancesellkraken():
                     "volume": arriveatkraken,
                     "pair": "NANOUSDT",
                 }, kraken_api_key, kraken_api_sec)
-            while balancecoin("NANO") >= krakenbalancebefore:
+            while binancebalancecoin("NANO") >= krakenbalancebefore:
                 time.sleep(5)
                 print("Nano was sent to Kraken, yet did not  sold")
-            if balancecoin("NANO") < krakenbalancebefore:
+            if binancebalancecoin("NANO") < krakenbalancebefore:
                 print("Operation successful")
 
 
@@ -132,12 +132,13 @@ def ifprofit():
         time.sleep(10)
         getmenorprecocorretora()
         gethighsell()
-        print("Searching for profit...")
+        print("Searching for arbitrage opportunity with profit...")
         # We don´t need here to wait because the two function under already have time sleep
         if getmenorprecocorretora() == "KRAKEN" and gethighsell() == "BINANCE":
             print(f"Buy at Kraken")
             print(f"Sell at Binance")
-            print("The best place to buy is Kraken and the best place to sell is Binance, lets see if it has profit")
+            print(f"Buying price is {(NANO_Buy_PriceK * volume)}")
+            print(f"Selling price is {xno_price * (NANO_ExitfromKraken - trade_fee_XNOUSDT)}")
             print(f"Profit is {xno_price * (NANO_ExitfromKraken - trade_fee_XNOUSDT) - (NANO_Buy_PriceK * volume)} ")
             if xno_price * (NANO_ExitfromKraken - trade_fee_XNOUSDT) > (NANO_Buy_PriceK * volume) * profit:
                 a = 1
@@ -284,7 +285,7 @@ def All():
                             symbol="NANOUSDT",
                             quantity=NANO_ExitfromKraken,
                             price=xno_price)
-                        time.sleep(10)  # Wait a bit
+                        time.sleep(5)  # Wait a bit
                         # Time for see if it sold
                         # Let´s use the balance again
                         if Bbefore > binancebalancecoin("NANO"):
@@ -303,6 +304,7 @@ def All():
                     else:
                         while Bbefore < binancebalancecoin("NANO"):
                             time.sleep(10)
+                            errochegadaabinance = 0
                             errochegadaabinance = 1 + errochegadaabinance
                             print("Nano não chegou a Binance ainda,quantidade de {} segundos".format(
                                 errochegadaabinance * 10))
