@@ -38,7 +38,8 @@ For use or modify this code you *must* have understanding of Python , the librar
 
 ## Have I tested ?
 
-No, to this day i didn´t have tested the program. 
+Yes, I already have tested and did have sucess, although it is only valid if you have a lot of amound doing arbitrage. 
+Doing small amounts won´t have a sucessfull action.
 
 
 ## How can I help?
